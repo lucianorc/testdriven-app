@@ -2,9 +2,11 @@ import os
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_debugtoolbar import DebugToolbarExtension
 
 
 db = SQLAlchemy()
+toolbar = DebugToolbarExtension()
 
 
 def create_app():
@@ -14,6 +16,7 @@ def create_app():
     app.config.from_object(app_settings)
 
     db.init_app(app)
+    toolbar.init_app(app)
 
     from project.api.users import users_blueprint
     app.register_blueprint(users_blueprint)
