@@ -7,8 +7,8 @@ services:
       dockerfile: Dockerfile
     volumes:
       - './services/users:/usr/src/app'
-    ports:
-      - 5000:5000
+    expose:
+      - 5000
     environment:
       - FLASK_ENV=development
       - APP_SETTINGS=project.config.DevelopmentConfig
@@ -21,8 +21,6 @@ services:
     build:
       context: services/users/project/db
       dockerfile: Dockerfile
-    ports:
-      - 5432:5432
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
@@ -45,8 +43,8 @@ services:
     volumes:
       - './services/client:/usr/src/app'
       - '/usr/src/app/node_modules'
-    ports:
-      - 3000:3000
+    expose:
+      - 3000
     environment:
       - NODE_ENV=development
       - REACT_APP_USERS_SERVICE_URL=${REACT_APP_USERS_SERVICE_URL}
