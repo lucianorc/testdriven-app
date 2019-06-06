@@ -3,6 +3,7 @@ import unittest
 from project import db
 from project.api.models import User
 from project.tests.base import BaseTestCase
+from project.tests.utils import add_user
 
 from sqlalchemy.exc import IntegrityError
 
@@ -10,10 +11,7 @@ from sqlalchemy.exc import IntegrityError
 class TestUserModel(BaseTestCase):
     def test_add_user(self):
         """ Ensure model can add a new user """
-        user = User(
-            username='John Doe',
-            email='johndoe@email.com'
-        )
+        user = add_user('John Doe', 'johndoe@email.com')
         db.session.add(user)
         db.session.commit()
 
@@ -26,10 +24,7 @@ class TestUserModel(BaseTestCase):
         """
         Ensure model can't add an user with same username
         """
-        user = User(
-            username='John Doe',
-            email='johndoe@email.com'
-        )
+        user = add_user('John Doe', 'johndoe@email.com')
         db.session.add(user)
         db.session.commit()
 
@@ -39,16 +34,14 @@ class TestUserModel(BaseTestCase):
         )
         db.session.add(duplicated_user)
 
-        self.assertRaises(IntegrityError, db.session.commit())
+        with self.assertRaises(IntegrityError):
+            db.session.commit()
 
-    def test_add_user_duplicate_username(self):
+    def test_add_user_duplicate_email(self):
         """
         Ensure model can't add an user with same email
         """
-        user = User(
-            username='John Doe',
-            email='johndoe@email.com'
-        )
+        user = add_user('John Doe', 'johndoe@email.com')
         db.session.add(user)
         db.session.commit()
 
@@ -58,14 +51,12 @@ class TestUserModel(BaseTestCase):
         )
         db.session.add(duplicated_email)
 
-        self.assertRaises(IntegrityError, db.session.commit())
+        with self.assertRaises(IntegrityError):
+            db.session.commit()
 
     def test_to_json(self):
         """ Ensure model can return JSON format User data """
-        user = User(
-            username='John Doe',
-            email='johndoe@email.com'
-        )
+        user = add_user('John Doe', 'johndoe@email.com')
         db.session.add(user)
         db.session.commit()
 
